@@ -1,0 +1,66 @@
+create database customer_care;
+
+use customer_care;
+
+create table customer ( 
+ id varchar(20) not null primary key,
+ name varchar(30) not null,
+ doj datetime not null
+);
+
+create table employee (
+ id varchar(20) not null primary key,
+ password varchar(30) not null,
+ name varchar(30) not null,
+ doj datetime not null,
+supervisor varchar(20),
+foreign key (supervisor) references employee (id) on delete set null
+);
+
+create table category (
+ id varchar(10) not null primary key,
+ name varchar(20) not null ,
+ description varchar(1000)
+);
+
+create table complaint (
+ id varchar(50) not null primary key,
+ created_by varchar(20),
+ complaint_by varchar(20),
+ assigned_to varchar(20),
+ status varchar(10) not null default 'open',
+ description varchar(1000) not null,
+ category varchar(10) not null default 'unknown',
+ foreign key (created_by) references employee (id) ,
+ foreign key (complaint_by) references customer (id) ,
+ foreign key (assigned_to) references employee (id) on delete set null,
+ foreign key (category) references category(id)
+);
+
+create table complaint_comments (
+ id varchar(100) not null primary key,
+ complaint_id varchar(50) not null,
+ comment_by varchar(20) not null,
+ comment varchar(1000) not null,
+ comment_time datetime not null,
+ foreign key (complaint_id) references complaint (id) on delete cascade
+);
+
+insert into customer (id,  name, doj) values ('8886782108', 'Harsha', now());
+insert into customer (id,  name, doj) values ('9035297135', 'Padmanabh', now());
+insert into customer (id,  name, doj) values ('1234567890', 'Sharma', now());
+insert into customer (id,  name, doj) values ('1111111111', 'Karan', now());
+insert into customer (id,  name, doj) values ('2222222222', 'Karthik', now());
+insert into customer (id,  name, doj) values ('3333333333', 'Rishi', now());
+
+insert into employee (id, password, name, doj, supervisor) values ('hima', 'hello', 'Himateja', now(), NULL);
+insert into employee (id, password, name, doj, supervisor) values ('anirban', 'hello', 'Anirban', now(), 'hima');
+insert into employee (id, password, name, doj, supervisor) values ('karthik', 'hello', 'Karthik Renjit', now(),'hima');
+insert into employee (id, password, name, doj, supervisor) values ('ravik', 'hello', 'Ravi Kumar', now(), 'hima');
+insert into employee (id, password, name, doj, supervisor) values ('satis', 'hello', 'Satish', now(), 'anirban');
+
+insert into category (id, name, description) values ('electronics', 'Electronics', 'All electronic related issues');
+insert into category (id, name, description) values ('food', 'Food', 'All food related issues');
+insert into category (id, name, description) values ('sports', 'Sports', 'All sports related issues');
+insert into category (id, name, description) values ('music', 'Music', 'All musical instruments related issues');
+insert into category (id, name, description) values ('household', 'Household Items', 'All Household Items related issues');
